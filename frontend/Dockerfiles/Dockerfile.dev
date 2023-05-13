@@ -1,0 +1,21 @@
+# Docker file for development environment
+FROM node:current-alpine3.17
+
+# Set working directory
+RUN mkdir /app
+WORKDIR /app
+
+# Copy package.json and yarn.lock
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn install && yarn cache clean
+
+# Copy angular.json, tsconfig.json tsconfig.app.json
+COPY angular.json tsconfig.json tsconfig.app.json ./
+
+# Copy source code
+COPY src .
+
+# Start the app
+CMD ["yarn", "start", "--host=0.0.0.0"]

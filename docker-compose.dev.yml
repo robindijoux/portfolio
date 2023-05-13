@@ -1,0 +1,11 @@
+version: '3'
+services:
+  frontend:
+    image: portfolio
+    build:
+      context: frontend
+      dockerfile: Dockerfiles/Dockerfile.dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - ${PWD}/frontend/src:/app/src
