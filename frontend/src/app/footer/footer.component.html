@@ -1,6 +1,9 @@
-<div class="mt-5 p-2 d-flex justify-content-around">
-        <a *ngFor="let link of links" class="bg-secondary border rounded p-2 d-flex justify-content-center align-items-center" [href]="link.url">
+<div class="mt-5 d-flex justify-content-end">
+    <ng-container *ngFor="let link of links">
+        <button class="btn btn-secondary border rounded-0 rounded-top p-2 d-flex justify-content-center align-items-center" (click)="navigateToExternalUrl(link.url)">
             <img *ngIf="link.icon" [src]="link.icon" [alt]="link.name + ' icon'" class="h-100 me-1" />
             {{link.name}}
-        </a>
+        </button>
+    </ng-container>
+
 </div>

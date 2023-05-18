@@ -1,8 +1,8 @@
 <nav class="navbar fixed-top navbar-expand-lg">
     <div class="container-fluid ps-0">
-      <a class="navbar-brand bg-secondary ps-3 pe-2 rounded-end" (click)="navigate([''])">
+      <button class="navbar-brand btn btn-secondary rounded-0 rounded-end" (click)="navigate([''])">
         <h3 class="m-0" >Hello, World.</h3>
-      </a>
+      </button>
       <button
         class="navbar-toggler bg-primary"
         type="button"
@@ -16,11 +16,11 @@
       </button>
       <div class="collapse navbar-collapse ms-4" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a
+          <button
             *ngFor="let content of getContentService().getAllContent()|async"
             (click)="selectContent(content.id)"
             [class]="
-              'rounded bg-primary nav-link px-2 mx-2 my-1' +
+              'btn btn-primary rounded nav-link m-1' +
               (getContentIdToBold() === content.id ? ' active' : '')
             "
             [attr.aria-current]="
@@ -28,10 +28,10 @@
             "
           >
             {{ content.title }}
-          </a>
-          <a *ngIf="showAdminButtons()|async" class="rounded bg-info text-white nav-link px-2 mx-2 my-1" (click)="navigate(['add-project'])">
+          </button>
+          <button *ngIf="showAdminButtons()|async" class="btn btn-info rounded text-white nav-link m-1" (click)="navigate(['add-project'])">
             <i class="bi bi-clipboard2-plus"></i> Add project
-          </a>
+          </button>
         </div>
       </div>
     </div>

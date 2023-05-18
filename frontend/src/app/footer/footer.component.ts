@@ -23,4 +23,8 @@ export class FooterComponent {
   constructor(private sanitizer: DomSanitizer) {
     
   }
+
+  navigateToExternalUrl(url: string) {
+    window.open(url);
+  }
 }
