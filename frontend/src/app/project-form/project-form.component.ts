@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Content } from '../services/content/dto/content.dto';
 import { ContentService } from '../services/content/content.service';
 
 @Component({
   selector: 'app-project-form',
   templateUrl: './project-form.component.html',
-  styleUrls: ['./project-form.component.sass']
+  styleUrls: ['./project-form.component.sass'],
+  host: {
+    class: 'mt-5 flex-fill'
+  }
 })
 export class ProjectFormComponent implements OnInit {
   contentForm!: FormGroup;
