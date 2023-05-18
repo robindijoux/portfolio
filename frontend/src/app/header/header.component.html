@@ -29,7 +29,7 @@
           >
             {{ content.title }}
           </a>
-          <a class="rounded bg-info text-white nav-link px-2 mx-2 my-1" (click)="navigate(['add-project'])">
+          <a *ngIf="showAdminButtons()|async" class="rounded bg-info text-white nav-link px-2 mx-2 my-1" (click)="navigate(['add-project'])">
             <i class="bi bi-clipboard2-plus"></i> Add project
           </a>
         </div>

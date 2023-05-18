@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { ContentService } from '../services/content/content.service';
 import { Router } from '@angular/router';
+import { SessionService } from '../services/session/session.service';
+import { map } from 'rxjs';
+import { ROLE } from '../services/session/dto/session.dto';
 
 @Component({
   selector: 'app-header',
@@ -11,10 +14,18 @@ import { Router } from '@angular/router';
   }
 })
 export class HeaderComponent {
-  constructor(private contentService: ContentService, private router: Router) {}
+  constructor(private contentService: ContentService, private router: Router, private sessionService: SessionService) {}
 
   getContentService() {
     return this.contentService;
+  }
+
+  showAdminButtons() {
+    return this.sessionService.getCurrentSession().pipe(
+      map(
+        s => s?.role === ROLE.ADMIN
+      )
+    )
   }
 
   getContentIdToBold() {

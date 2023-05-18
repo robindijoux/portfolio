@@ -1,13 +1,37 @@
 <div class="container d-flex flex-column h-100">
-  <h1>
-    {{ (content$|async)?.title }}
+  <h1 class="d-flex">
+    <ng-container *ngIf="!editModeTitle; else editTitle">
+      {{ (content$ | async)?.title }}
+      <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="editModeTitle = true"></i>
+    </ng-container>
+    <ng-template #editTitle>
+      <input type="text" class="form-control w-50 me-2" [(ngModel)]="editedTitle" [value]="editedTitle">
+      <button class="btn btn-danger" (click)="cancelEdit('title')">Cancel</button>
+    </ng-template>
   </h1>
-  <div class="flex-fill" *ngFor="let paragraph of (content$|async)?.paragraphs">
-    <h2>
-      {{ paragraph.title }}
+  <div *ngFor="let paragraph of (content$ | async)?.paragraphs; let i = index">
+    <h2 class="d-flex">
+      <ng-container *ngIf="!editModeParagraphTitle[i]; else editParagraphTitle">
+        {{ paragraph.title }}
+        <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="editModeParagraphTitle[i] = true"></i>
+      </ng-container>
+      <ng-template #editParagraphTitle>
+        <input type="text" class="form-control w-50 me-2" [(ngModel)]="editedParagraphTitle[i]" [value]="paragraph.title">
+        <button class="btn btn-danger" (click)="cancelEdit('paragraphTitle', i)">Cancel</button>
+      </ng-template>
     </h2>
-    <p>
-      {{ paragraph.content }}
+    <p class="d-flex">
+      <ng-container *ngIf="!editModeContent[i]; else editContent">
+        {{ paragraph.content }}
+        <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="editModeContent[i] = true"></i>
+      </ng-container>
+      <ng-template #editContent>
+        <textarea class="form-control w-50 me-2" rows="3" [(ngModel)]="editedContent[i]">{{ paragraph.content }}</textarea>
+        <button class="btn btn-danger" (click)="cancelEdit('content', i)">Cancel</button>
+      </ng-template>
     </p>
+  </div>
+  <div *ngIf="shouldDisplayAdmin() | async">
+    <button class="btn btn-success text-white" (click)="save()">Save <i class="bi bi-pencil-square"></i></button>
   </div>
 </div>
