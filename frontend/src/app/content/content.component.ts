@@ -95,6 +95,7 @@ export class ContentComponent {
       this.editedTitle!,
       this.editedParagraphTitle.map(
         (title, index): Paragraph => ({
+          id: this.content$.getValue()?.paragraphs[index].id!,
           title,
           content: this.editedContent[index],
         })

@@ -15,10 +15,12 @@ export class ContentService {
       title: '🚀 Sample project 1',
       paragraphs: [
         {
+          id: "p11",
           title: 'Parag 1',
           content: 'Content 1',
         },
         {
+          id: "p11",
           title: 'Parag 2',
           content: 'Content 2',
         },
@@ -29,10 +31,12 @@ export class ContentService {
       title: '📱 Sample project 2',
       paragraphs: [
         {
+          id: "p21",
           title: 'Parag 1',
           content: 'Content 1',
         },
         {
+          id: "p22",
           title: 'Parag 2',
           content: 'Content 2',
         },

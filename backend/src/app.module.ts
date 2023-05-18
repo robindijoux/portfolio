@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ContentModule } from './content/content.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProjectModule } from './project/project.module';
+import { Project } from './project/entities/project.entity';
+import { Paragraph } from './project/paragraph/entities/paragraph.entity';
 
 @Module({
   imports: [
@@ -17,10 +19,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => (configService.get('database')),
+      useFactory: (configService: ConfigService) => {
+        return ({
+          ...configService.get('database'),
+          entities: [
+            Project,
+            Paragraph
+          ],
+        })
+      },
       inject: [ConfigService],
     }),
-    ContentModule
+    ProjectModule
   ],
   controllers: [AppController],
   providers: [AppService],

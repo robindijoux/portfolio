@@ -6,5 +6,6 @@ export default registerAs('database', () => ({
     type: process.env.DATABASE_TYPE,
     host: process.env.DATABASE_HOST,
     port: +process.env.DATABASE_PORT,
-    database: process.env.DATABASE_
+    database: process.env.DATABASE_DB_NAME,
+    synchronize: process.env.DATABASE_SYNCHRONIZE
 }))
