@@ -1,4 +1,4 @@
-<div class="container d-flex flex-column h-100">
+<div class="container d-flex flex-column">
   <h1 class="d-flex">
     <ng-container *ngIf="!editModeTitle; else editTitle">
       {{ (content$ | async)?.title }}
@@ -9,7 +9,7 @@
       <button class="btn btn-danger" (click)="cancelEdit('title')">Cancel</button>
     </ng-template>
   </h1>
-  <div *ngFor="let paragraph of (content$ | async)?.paragraphs; let i = index">
+  <ng-container *ngFor="let paragraph of (content$ | async)?.paragraphs; let i = index">
     <h2 class="d-flex">
       <ng-container *ngIf="!editModeParagraphTitle[i]; else editParagraphTitle">
         {{ paragraph.title }}
@@ -30,7 +30,7 @@
         <button class="btn btn-danger" (click)="cancelEdit('content', i)">Cancel</button>
       </ng-template>
     </p>
-  </div>
+  </ng-container>
   <div *ngIf="shouldDisplayAdmin() | async">
     <button class="btn btn-success text-white" (click)="save()">Save <i class="bi bi-pencil-square"></i></button>
   </div>

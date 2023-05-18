@@ -11,9 +11,6 @@ import { CreateContent } from '../services/content/dto/create-content.dto';
   selector: 'app-content',
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.sass'],
-  host: {
-    class: 'flex-fill',
-  },
 })
 export class ContentComponent {
   content$: BehaviorSubject<Content | undefined>;
