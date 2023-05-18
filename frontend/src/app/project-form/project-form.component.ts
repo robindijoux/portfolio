@@ -40,6 +40,7 @@ export class ProjectFormComponent implements OnInit {
   onSubmit() {
     if (this.contentForm.valid) {
       this.contentService.createContent(this.contentForm.value.title, this.contentForm.value.paragraphs)
+      this.contentForm.reset()
     }
   }
 }
