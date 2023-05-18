@@ -1,0 +1,39 @@
+<nav class="navbar fixed-top navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand bg-secondary m-1 p-2 rounded" href="/home">
+        <h3 class="m-0" >Hello, World.</h3>
+      </a>
+      <button
+        class="navbar-toggler bg-primary"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse ms-4" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a
+            *ngFor="let content of getContentService().getAllContent()|async"
+            (click)="onClick(content.id)"
+            [class]="
+              'rounded bg-primary nav-link px-2 mx-2 my-1' +
+              (getContentIdToBold() === content.id ? ' active' : '')
+            "
+            [attr.aria-current]="
+                (getContentService().getSelectedContent()| async)?.id === content.id ? 'page' : ''
+            "
+          >
+            {{ content.title }}
+          </a>
+          <a class="rounded bg-info text-white nav-link px-2 mx-2 my-1" href="add-project">
+            <i class="bi bi-clipboard2-plus"></i> Add project
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  

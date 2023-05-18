@@ -1,0 +1,13 @@
+<div class="container d-flex flex-column h-100">
+  <h1>
+    {{ (content$|async)?.title }}
+  </h1>
+  <div class="flex-fill" *ngFor="let paragraph of (content$|async)?.paragraphs">
+    <h2>
+      {{ paragraph.title }}
+    </h2>
+    <p>
+      {{ paragraph.content }}
+    </p>
+  </div>
+</div>
