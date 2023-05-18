@@ -6,46 +6,48 @@ import { CreateContent } from './dto/create-content.dto';
 import { Paragraph } from './dto/paragraph.dto';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ContentService {
-
   private mock: Content[] = [
     {
-      id: "1",
-      title: "🚀 Sample project 1",
+      id: '1',
+      title: '🚀 Sample project 1',
       paragraphs: [
         {
-          title: "Parag 1",
-          content: "Content 1"
+          title: 'Parag 1',
+          content: 'Content 1',
         },
         {
-          title: "Parag 2",
-          content: "Content 2"
-        }
-      ]
+          title: 'Parag 2',
+          content: 'Content 2',
+        },
+      ],
     },
     {
-      id: "2",
-      title: "📱 Sample project 2",
+      id: '2',
+      title: '📱 Sample project 2',
       paragraphs: [
         {
-          title: "Parag 1",
-          content: "Content 1"
+          title: 'Parag 1',
+          content: 'Content 1',
         },
         {
-          title: "Parag 2",
-          content: "Content 2"
-        }
-      ]
-    }
-  ]
+          title: 'Parag 2',
+          content: 'Content 2',
+        },
+      ],
+    },
+  ];
 
-  private contents$: BehaviorSubject<Content[]> = new BehaviorSubject<Content[]>([]);
-  private selectedContent$: BehaviorSubject<Content | undefined> = new BehaviorSubject<Content | undefined>(undefined); 
+  private contents$: BehaviorSubject<Content[]> = new BehaviorSubject<
+    Content[]
+  >([]);
+  private selectedContent$: BehaviorSubject<Content | undefined> =
+    new BehaviorSubject<Content | undefined>(undefined);
 
   constructor(private http: HttpClient) {
-    this.refreshContent()
+    this.refreshContent();
   }
 
   getAllContent() {
@@ -57,23 +59,19 @@ export class ContentService {
   }
 
   private refreshContent() {
-    this.contents$.next(
-      this.mock
-    )
-    this.selectedContent$.next(this.mock[0])
+    this.contents$.next(this.mock);
+    this.selectedContent$.next(this.mock[0]);
   }
 
   selectContent(contentId: string) {
-    let filtered = this.contents$.getValue().filter(
-      content => content.id === contentId
-    )
+    let filtered = this.contents$
+      .getValue()
+      .filter((content) => content.id === contentId);
 
     if (filtered.length > 0) {
-      this.selectedContent$.next(
-        filtered[0]
-      )
+      this.selectedContent$.next(filtered[0]);
     } else {
-      console.error("No content with id", contentId);
+      console.error('No content with id', contentId);
     }
   }
 
@@ -83,12 +81,30 @@ export class ContentService {
     const newContent: Content = {
       id: new Date().toString(),
       title,
-      paragraphs
-    }
+      paragraphs,
+    };
     let contents = this.contents$.getValue();
     contents.push(newContent);
-    this.contents$.next(contents)
-    console.log("New content created!", contents);
-    
+    this.contents$.next(contents);
+    console.log('New content created!', contents);
+  }
+
+  updateContent(id: string, contentUpdate: CreateContent) {
+    let prevContents = this.contents$.getValue();
+    let prevTargetIndex = prevContents.findIndex(
+      (content) => content.id === id
+    );
+
+    if (prevTargetIndex > -1) {
+      const updatedContent: Content = {
+        id,
+        ...contentUpdate,
+      }
+      prevContents[prevTargetIndex] = updatedContent
+      this.contents$.next(prevContents);
+      if (this.selectedContent$.getValue()?.id === id) {
+        this.selectContent(id);
+      }
+    }
   }
 }
