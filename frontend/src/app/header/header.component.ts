@@ -24,8 +24,12 @@ export class HeaderComponent {
     return undefined;
   }
 
-  onClick(contentId: string) {
+  selectContent(contentId: string) {
     this.contentService.selectContent(contentId);
-    this.router.navigate(["projects", contentId])
+    this.navigate(["projects", contentId])
+  }
+
+  navigate(route: string[]) {
+    this.router.navigate(route);
   }
 }

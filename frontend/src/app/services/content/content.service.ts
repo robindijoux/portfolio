@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Content } from './dto/content.dto';
 import { BehaviorSubject } from 'rxjs';
+import { CreateContent } from './dto/create-content.dto';
+import { Paragraph } from './dto/paragraph.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -73,5 +75,20 @@ export class ContentService {
     } else {
       console.error("No content with id", contentId);
     }
+  }
+
+  createContent(title: string, paragraphs: Paragraph[]) {
+    const createContent = new CreateContent(title, paragraphs);
+    // TODO http
+    const newContent: Content = {
+      id: new Date().toString(),
+      title,
+      paragraphs
+    }
+    let contents = this.contents$.getValue();
+    contents.push(newContent);
+    this.contents$.next(contents)
+    console.log("New content created!", contents);
+    
   }
 }
