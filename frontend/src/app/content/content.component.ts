@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Content } from '../services/content/dto/content.dto';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { ContentService } from '../services/content/content.service';
 import { SessionService } from '../services/session/session.service';
 import { ROLE } from '../services/session/dto/session.dto';
@@ -12,7 +12,7 @@ import { CreateContent } from '../services/content/dto/create-content.dto';
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.sass'],
   host: {
-    class: 'mt-5 border-primary flex-fill',
+    class: 'flex-fill',
   },
 })
 export class ContentComponent {

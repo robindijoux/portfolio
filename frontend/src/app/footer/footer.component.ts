@@ -5,6 +5,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.sass'],
+  host: {
+    class: 'mt-5'
+  }
 })
 export class FooterComponent {
   links: { name: string; url: string; icon?: SafeHtml;}[] = [

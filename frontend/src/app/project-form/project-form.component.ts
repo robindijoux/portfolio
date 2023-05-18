@@ -7,7 +7,7 @@ import { ContentService } from '../services/content/content.service';
   templateUrl: './project-form.component.html',
   styleUrls: ['./project-form.component.sass'],
   host: {
-    class: 'mt-5 flex-fill'
+    class: 'flex-fill'
   }
 })
 export class ProjectFormComponent implements OnInit {
