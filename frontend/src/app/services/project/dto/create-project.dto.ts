@@ -1,6 +1,6 @@
 import { CreateParagraph } from "../../paragraph/dto/create-paragraph.dto";
 
-export class CreateContent {
+export class CreateProject {
     title: string;
     paragraphs: CreateParagraph[];
 

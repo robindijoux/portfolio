@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { Content } from '../services/content/dto/content.dto';
+import { Project } from '../services/project/dto/project.dto';
 import { BehaviorSubject, map } from 'rxjs';
-import { ContentService } from '../services/content/content.service';
+import { ProjectService } from '../services/project/project.service';
 import { SessionService } from '../services/session/session.service';
 import { ROLE } from '../services/session/dto/session.dto';
-import { UpdateContent } from '../services/content/dto/update-content.dto';
 import { UpdateParagraph } from '../services/paragraph/dto/update-paragraph.dto';
 import { ParagraphService } from '../services/paragraph/paragraph.service';
 import { Paragraph } from '../services/paragraph/dto/paragraph.dto';
@@ -21,12 +20,12 @@ interface ParagraphEditField {
 }
 
 @Component({
-  selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.sass'],
+  selector: 'app-project',
+  templateUrl: './project.component.html',
+  styleUrls: ['./project.component.sass'],
 })
-export class ContentComponent {
-  content$: BehaviorSubject<Content | undefined>;
+export class ProjectComponent {
+  project$: BehaviorSubject<Project | undefined>;
   paragraphs$: BehaviorSubject<Paragraph[]>;
 
   editModeTitle = false;
@@ -36,15 +35,15 @@ export class ContentComponent {
   paragraphsEdit: ParagraphEdit[] = [];
 
   constructor(
-    private contentService: ContentService,
+    private projectService: ProjectService,
     private paragraphService: ParagraphService,
     private sessionService: SessionService
   ) {
-    this.content$ = this.contentService.getSelectedContent();
+    this.project$ = this.projectService.getSelectedProject();
     this.paragraphs$ = this.paragraphService.getParagraphs();
-    // Fetch the content data and initialize the form input variables
-    this.content$.subscribe((content) => {
-      this.editedTitle = content?.title;
+
+    this.project$.subscribe((project) => {
+      this.editedTitle = project?.title;
     });
 
     this.paragraphs$.subscribe((paragraphs) => {
@@ -76,7 +75,7 @@ export class ContentComponent {
 
   cancelEditTitle() {
     this.editModeTitle = false;
-    this.editedTitle = this.content$.getValue()?.title;
+    this.editedTitle = this.project$.getValue()?.title;
   }
 
   cancelEditParagraph(paragraphId: string, fieldName?: keyof ParagraphEdit) {
@@ -117,8 +116,8 @@ export class ContentComponent {
   save() {
 
     if (this.editModeTitle) {
-      this.contentService.updateContent(
-        this.content$.getValue()?.id!,
+      this.projectService.updateProject(
+        this.project$.getValue()?.id!,
         {
           title: this.editedTitle, 
         }

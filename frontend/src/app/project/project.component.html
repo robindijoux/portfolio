@@ -1,7 +1,7 @@
 <div class="container d-flex flex-column">
   <h1 class="d-flex">
     <ng-container *ngIf="!editModeTitle; else editTitle">
-      {{ (content$ | async)?.title }}
+      {{ (project$ | async)?.title }}
       <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="editModeTitle = true"></i>
     </ng-container>
     <ng-template #editTitle>

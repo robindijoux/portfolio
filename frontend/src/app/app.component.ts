@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ContentService } from './services/content/content.service';
+import { ProjectService } from './services/project/project.service';
 
 @Component({
   selector: 'app-root',
@@ -9,11 +9,11 @@ import { ContentService } from './services/content/content.service';
 export class AppComponent {
   title = 'frontend';
 
-  constructor(private contentService: ContentService) {
+  constructor(private projectService: ProjectService) {
 
   }
 
-  getSelectedContent() {
-    return this.contentService.getSelectedContent();
+  getSelectedProject() {
+    return this.projectService.getSelectedProject();
   }
 }

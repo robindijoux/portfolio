@@ -6,7 +6,7 @@ import { Paragraph } from './dto/paragraph.dto';
 import { env } from '../../../env/env';
 import { CreateParagraph } from './dto/create-paragraph.dto';
 import { UpdateParagraph } from './dto/update-paragraph.dto';
-import { ContentService } from '../content/content.service';
+import { ProjectService } from '../project/project.service';
 
 
 @Injectable({

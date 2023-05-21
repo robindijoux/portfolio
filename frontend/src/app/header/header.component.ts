@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ContentService } from '../services/content/content.service';
+import { ProjectService } from '../services/project/project.service';
 import { Router } from '@angular/router';
 import { SessionService } from '../services/session/session.service';
 import { map } from 'rxjs';
@@ -14,10 +14,10 @@ import { ROLE } from '../services/session/dto/session.dto';
   }
 })
 export class HeaderComponent {
-  constructor(private contentService: ContentService, private router: Router, private sessionService: SessionService) {}
+  constructor(private projectService: ProjectService, private router: Router, private sessionService: SessionService) {}
 
-  getContentService() {
-    return this.contentService;
+  getProjectService() {
+    return this.projectService;
   }
 
   showAdminButtons() {
@@ -28,16 +28,16 @@ export class HeaderComponent {
     )
   }
 
-  getContentIdToBold() {
+  getProjectIdToBold() {
     if (this.router.url.includes("projects/")) {
-      return this.contentService.getSelectedContent().getValue()?.id
+      return this.projectService.getSelectedProject().getValue()?.id
     }
     return undefined;
   }
 
-  selectContent(contentId: string) {
-    this.contentService.selectContent(contentId);
-    this.navigate(["projects", contentId])
+  selectProject(projectId: string) {
+    this.projectService.selectProject(projectId);
+    this.navigate(["projects", projectId])
   }
 
   navigate(route: string[]) {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ContentService } from '../services/content/content.service';
+import { ProjectService } from '../services/project/project.service';
 
 @Component({
   selector: 'app-project-form',
@@ -11,19 +11,19 @@ import { ContentService } from '../services/content/content.service';
   }
 })
 export class ProjectFormComponent implements OnInit {
-  contentForm!: FormGroup;
+  projectForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private contentService: ContentService) { }
+  constructor(private formBuilder: FormBuilder, private projectService: ProjectService) { }
 
   ngOnInit() {
-    this.contentForm = this.formBuilder.group({
+    this.projectForm = this.formBuilder.group({
       title: ['', Validators.required],
       paragraphs: this.formBuilder.array([])
     });
   }
 
   get paragraphForms() {
-    return this.contentForm.get('paragraphs') as FormArray;
+    return this.projectForm.get('paragraphs') as FormArray;
   }
 
   addParagraph() {
@@ -40,9 +40,9 @@ export class ProjectFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.contentForm.valid) {
-      this.contentService.createContent(this.contentForm.value.title, this.contentForm.value.paragraphs)
-      this.contentForm.reset()
+    if (this.projectForm.valid) {
+      this.projectService.createProject(this.projectForm.value.title, this.projectForm.value.paragraphs)
+      this.projectForm.reset()
     }
   }
 }

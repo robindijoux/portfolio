@@ -17,17 +17,17 @@
       <div class="collapse navbar-collapse ms-4" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <button
-            *ngFor="let content of getContentService().getAllContent()|async"
-            (click)="selectContent(content.id)"
+            *ngFor="let project of getProjectService().getAllProjects()|async"
+            (click)="selectProject(project.id)"
             [class]="
               'btn btn-primary rounded nav-link m-1' +
-              (getContentIdToBold() === content.id ? ' active' : '')
+              (getProjectIdToBold() === project.id ? ' active' : '')
             "
             [attr.aria-current]="
-                (getContentService().getSelectedContent()| async)?.id === content.id ? 'page' : ''
+                (getProjectService().getSelectedProject()| async)?.id === project.id ? 'page' : ''
             "
           >
-            {{ content.title }}
+            {{ project.title }}
           </button>
           <button *ngIf="showAdminButtons()|async" class="btn btn-info rounded text-white nav-link m-1" (click)="navigate(['add-project'])">
             <i class="bi bi-clipboard2-plus"></i> Add project
