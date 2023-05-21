@@ -4,7 +4,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
 
-@Controller('project')
+@Controller('')
 @ApiTags('project')
 export class ProjectController {
   private logger = new Logger('ProjectController');

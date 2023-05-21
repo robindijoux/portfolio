@@ -3,54 +3,37 @@ import { Injectable } from '@angular/core';
 import { Content } from './dto/content.dto';
 import { BehaviorSubject } from 'rxjs';
 import { CreateContent } from './dto/create-content.dto';
-import { Paragraph } from './dto/paragraph.dto';
+import { env } from '../../../env/env';
+import { UpdateContent } from './dto/update-content.dto';
+import { CreateParagraph } from '../paragraph/dto/create-paragraph.dto';
+import { ParagraphService } from '../paragraph/paragraph.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContentService {
-  private mock: Content[] = [
-    {
-      id: '1',
-      title: '🚀 Sample project 1',
-      paragraphs: [
-        {
-          id: "p11",
-          title: 'Parag 1',
-          content: 'Content 1',
-        },
-        {
-          id: "p11",
-          title: 'Parag 2',
-          content: 'Content 2',
-        },
-      ],
-    },
-    {
-      id: '2',
-      title: '📱 Sample project 2',
-      paragraphs: [
-        {
-          id: "p21",
-          title: 'Parag 1',
-          content: 'Content 1',
-        },
-        {
-          id: "p22",
-          title: 'Parag 2',
-          content: 'Content 2',
-        },
-      ],
-    },
-  ];
-
   private contents$: BehaviorSubject<Content[]> = new BehaviorSubject<
     Content[]
   >([]);
   private selectedContent$: BehaviorSubject<Content | undefined> =
     new BehaviorSubject<Content | undefined>(undefined);
 
-  constructor(private http: HttpClient) {
+  private projectUrl?: string;
+
+  constructor(private http: HttpClient, private paragraphService: ParagraphService) {
+    this.selectedContent$.subscribe({
+      next: (content) => {
+          this.paragraphService.setProjectId(content?.id!);
+      }
+    })
+    if (env.backend) {
+      this.projectUrl =
+        env.backend!.protocol +
+        '://' +
+        env.backend!.host +
+        '/' +
+        env.backend!.endpoints.project;
+    }
     this.refreshContent();
   }
 
@@ -63,52 +46,71 @@ export class ContentService {
   }
 
   private refreshContent() {
-    this.contents$.next(this.mock);
-    this.selectedContent$.next(this.mock[0]);
+    if (this.projectUrl) {
+      console.log(`URL: ${this.projectUrl}`);
+      this.http.get<Content[]>(this.projectUrl).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.contents$.next(res);
+
+          if (this.selectedContent$.getValue()) {
+            this.selectContent(this.selectedContent$.getValue()!.id);
+          }
+        },
+        error: (e) => {
+          console.error(e);
+        },
+      });
+    } else {
+      console.error(`No env found.`);
+    }
   }
 
   selectContent(contentId: string) {
     let filtered = this.contents$
       .getValue()
-      .filter((content) => content.id === contentId);
+      .find((content) => content.id === contentId);
 
-    if (filtered.length > 0) {
-      this.selectedContent$.next(filtered[0]);
+    if (filtered) {
+      this.selectedContent$.next(filtered);
     } else {
+      this.selectedContent$.next(undefined);
       console.error('No content with id', contentId);
+    }
+
+    
+  }
+
+  createContent(title: string, paragraphs: CreateParagraph[]) {
+    const createContent = new CreateContent(title, paragraphs);
+    if (this.projectUrl) {
+      this.http.post<Content>(this.projectUrl, createContent).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.refreshContent();
+          this.paragraphService.createParagraphs(res.id,paragraphs);
+        },
+        error: (e) => {
+          console.error(e);
+        },
+      });
+    } else {
+      console.error(`No URL`);
     }
   }
 
-  createContent(title: string, paragraphs: Paragraph[]) {
-    const createContent = new CreateContent(title, paragraphs);
-    // TODO http
-    const newContent: Content = {
-      id: new Date().toString(),
-      title,
-      paragraphs,
-    };
-    let contents = this.contents$.getValue();
-    contents.push(newContent);
-    this.contents$.next(contents);
-    console.log('New content created!', contents);
-  }
-
-  updateContent(id: string, contentUpdate: CreateContent) {
-    let prevContents = this.contents$.getValue();
-    let prevTargetIndex = prevContents.findIndex(
-      (content) => content.id === id
-    );
-
-    if (prevTargetIndex > -1) {
-      const updatedContent: Content = {
-        id,
-        ...contentUpdate,
-      }
-      prevContents[prevTargetIndex] = updatedContent
-      this.contents$.next(prevContents);
-      if (this.selectedContent$.getValue()?.id === id) {
-        this.selectContent(id);
-      }
+  updateContent(id: string, contentUpdate: UpdateContent) {
+    if (this.projectUrl) {
+      this.http.patch(this.projectUrl + '/' + id, contentUpdate).subscribe({
+        next: () => {
+          this.refreshContent();
+        },
+        error: (e) => {
+          console.error(e);
+        },
+      });
+    } else {
+      console.error(`No URL`);
     }
   }
 }

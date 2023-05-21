@@ -6,28 +6,28 @@
     </ng-container>
     <ng-template #editTitle>
       <input type="text" class="form-control w-50 me-2" [(ngModel)]="editedTitle" [value]="editedTitle">
-      <button class="btn btn-danger" (click)="cancelEdit('title')">Cancel</button>
+      <button class="btn btn-danger" (click)="cancelEditTitle()">Cancel</button>
     </ng-template>
   </h1>
-  <ng-container *ngFor="let paragraph of (content$ | async)?.paragraphs; let i = index">
+  <ng-container *ngFor="let paragraph of paragraphs$|async; let i = index">
     <h2 class="d-flex">
-      <ng-container *ngIf="!editModeParagraphTitle[i]; else editParagraphTitle">
+      <ng-container *ngIf="!getParagraphEditById(paragraph.id)?.title?.editMode; else editParagraphTitle">
         {{ paragraph.title }}
-        <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="editModeParagraphTitle[i] = true"></i>
+        <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="getParagraphEditById(paragraph.id)!.title.editMode= true"></i>
       </ng-container>
       <ng-template #editParagraphTitle>
-        <input type="text" class="form-control w-50 me-2" [(ngModel)]="editedParagraphTitle[i]" [value]="paragraph.title">
-        <button class="btn btn-danger" (click)="cancelEdit('paragraphTitle', i)">Cancel</button>
+        <input type="text" class="form-control w-50 me-2" [(ngModel)]="getParagraphEditById(paragraph.id)!.title!.value" [value]="paragraph.title">
+        <button class="btn btn-danger" (click)="cancelEditParagraph(paragraph.id, 'title')">Cancel</button>
       </ng-template>
     </h2>
     <p class="d-flex">
-      <ng-container *ngIf="!editModeContent[i]; else editContent">
+      <ng-container *ngIf="!getParagraphEditById(paragraph.id)?.content?.editMode; else editContent">
         {{ paragraph.content }}
-        <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="editModeContent[i] = true"></i>
+        <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="getParagraphEditById(paragraph.id)!.content!.editMode = true"></i>
       </ng-container>
       <ng-template #editContent>
-        <textarea class="form-control w-50 me-2" rows="3" [(ngModel)]="editedContent[i]">{{ paragraph.content }}</textarea>
-        <button class="btn btn-danger" (click)="cancelEdit('content', i)">Cancel</button>
+        <textarea class="form-control w-50 me-2" rows="3" [(ngModel)]="getParagraphEditById(paragraph.id)!.content!.value">{{ paragraph.content }}</textarea>
+        <button class="btn btn-danger" (click)="cancelEditParagraph(paragraph.id, 'content')">Cancel</button>
       </ng-template>
     </p>
   </ng-container>

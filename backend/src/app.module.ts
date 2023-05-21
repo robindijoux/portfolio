@@ -7,9 +7,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectModule } from './project/project.module';
 import { Project } from './project/entities/project.entity';
 import { Paragraph } from './project/paragraph/entities/paragraph.entity';
+import { RouterModule } from '@nestjs/core';
+import { ParagraphModule } from './project/paragraph/paragraph.module';
 
 @Module({
   imports: [
+    RouterModule.register([
+      {
+        path: 'project',
+        module: ProjectModule,
+        children: [
+          {
+            path: ':projectId/paragraph',
+            module: ParagraphModule,
+          }
+        ]
+      },
+    ]),
     ConfigModule.forRoot({
       envFilePath: [`${__dirname}/env/.env.local`],
       load: [
@@ -22,10 +36,7 @@ import { Paragraph } from './project/paragraph/entities/paragraph.entity';
       useFactory: (configService: ConfigService) => {
         return ({
           ...configService.get('database'),
-          entities: [
-            Project,
-            Paragraph
-          ],
+          autoLoadEntities: true,
         })
       },
       inject: [ConfigService],

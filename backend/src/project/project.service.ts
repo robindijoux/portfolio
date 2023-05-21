@@ -15,29 +15,19 @@ export class ProjectService {
   ) {}
 
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
-    const { title, paragraphs } = createProjectDto;
 
-    const project = this.projectRepository.create({ title });
+    const project = this.projectRepository.create({ ...createProjectDto });
     const createdProject = await this.projectRepository.save(project);
-
-    if (paragraphs && paragraphs.length > 0) {
-      const createdParagraphs = await Promise.all(
-        paragraphs.map((paragraphData) =>
-          this.paragraphService.create(createdProject.id, paragraphData),
-        ),
-      );
-      createdProject.paragraphs = createdParagraphs;
-    }
 
     return createdProject;
   }
 
   async findAll(): Promise<Project[]> {
-    return await this.projectRepository.find({ relations: ['paragraphs'] });
+    return await this.projectRepository.find();
   }
 
   async findOne(id: string): Promise<Project> {
-    const project = await this.projectRepository.findOne({where:{id}, relations: ['paragraphs'] });
+    const project = await this.projectRepository.findOne({where:{id}});
     if (!project) {
       throw new NotFoundException(`Project with ID ${id} not found`);
     }
@@ -45,24 +35,14 @@ export class ProjectService {
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto): Promise<Project> {
-    const { title, paragraphs } = updateProjectDto;
-
-    const project = await this.projectRepository.findOne({where:{id}, relations: ['paragraphs'] });
+    let project = await this.projectRepository.findOne({where:{id}});
     if (!project) {
       throw new NotFoundException(`Project with ID ${id} not found`);
     }
 
-    if (title) {
-      project.title = title;
-    }
-
-    if (paragraphs && paragraphs.length > 0) {
-      const updatedParagraphs = await Promise.all(
-        paragraphs.map((paragraphData) =>
-          this.paragraphService.update(project.id, paragraphData),
-        ),
-      );
-      project.paragraphs = updatedParagraphs;
+    project = {
+      ...project,
+      ...updateProjectDto
     }
 
     return await this.projectRepository.save(project);

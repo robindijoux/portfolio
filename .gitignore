@@ -1,2 +1,3 @@
 **/.vscode
-backend/src/env/.env.local
+backend/src/env/*.local*
+frontend/src/env/*.local*

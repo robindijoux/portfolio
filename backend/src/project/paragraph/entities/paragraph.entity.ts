@@ -1,9 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Generated, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Project } from "../../entities/project.entity";
 
 @Entity()
 export class Paragraph {
     @PrimaryGeneratedColumn('uuid')
+    @Generated('uuid')
     id: string;
 
     @Column()

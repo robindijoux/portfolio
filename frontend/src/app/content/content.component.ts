@@ -4,8 +4,21 @@ import { BehaviorSubject, map } from 'rxjs';
 import { ContentService } from '../services/content/content.service';
 import { SessionService } from '../services/session/session.service';
 import { ROLE } from '../services/session/dto/session.dto';
-import { Paragraph } from '../services/content/dto/paragraph.dto';
-import { CreateContent } from '../services/content/dto/create-content.dto';
+import { UpdateContent } from '../services/content/dto/update-content.dto';
+import { UpdateParagraph } from '../services/paragraph/dto/update-paragraph.dto';
+import { ParagraphService } from '../services/paragraph/paragraph.service';
+import { Paragraph } from '../services/paragraph/dto/paragraph.dto';
+
+interface ParagraphEdit {
+  id: string;
+  title: ParagraphEditField;
+  content: ParagraphEditField;
+}
+
+interface ParagraphEditField {
+  value: string;
+  editMode: boolean;
+}
 
 @Component({
   selector: 'app-content',
@@ -14,29 +27,39 @@ import { CreateContent } from '../services/content/dto/create-content.dto';
 })
 export class ContentComponent {
   content$: BehaviorSubject<Content | undefined>;
+  paragraphs$: BehaviorSubject<Paragraph[]>;
 
   editModeTitle = false;
   editedTitle?: string;
 
   // Declare arrays or maps for form inputs
-  editModeParagraphTitle: boolean[] = [];
-  editModeContent: boolean[] = [];
-  editedParagraphTitle: string[] = [];
-  editedContent: string[] = [];
+  paragraphsEdit: ParagraphEdit[] = [];
 
   constructor(
     private contentService: ContentService,
+    private paragraphService: ParagraphService,
     private sessionService: SessionService
   ) {
     this.content$ = this.contentService.getSelectedContent();
+    this.paragraphs$ = this.paragraphService.getParagraphs();
     // Fetch the content data and initialize the form input variables
     this.content$.subscribe((content) => {
       this.editedTitle = content?.title;
-      content?.paragraphs.forEach((paragraph, i) => {
-        this.editModeParagraphTitle[i] = false;
-        this.editModeContent[i] = false;
-        this.editedParagraphTitle[i] = paragraph.title;
-        this.editedContent[i] = paragraph.content;
+    });
+
+    this.paragraphs$.subscribe((paragraphs) => {
+      paragraphs.forEach((paragraph, i) => {
+        this.paragraphsEdit[i] = {
+          id: paragraph.id,
+          title: {
+            value: paragraph.title,
+            editMode: false,
+          },
+          content: {
+            value: paragraph.content,
+            editMode: false,
+          },
+        };
       });
     });
   }
@@ -47,72 +70,83 @@ export class ContentComponent {
       .pipe(map((s) => s?.role === ROLE.ADMIN));
   }
 
-  cancelEdit(field: string, index?: number) {
-    switch (field) {
-      case 'title':
-        this.cancelTitleEdit();
-        break;
-      case 'paragraphTitle':
-        if (index !== undefined) {
-          this.cancelParagraphTitleEdit(index);
-        }
-        break;
-      case 'content':
-        if (index !== undefined) {
-          this.cancelContentEdit(index);
-        }
-        break;
-      case 'all':
-        this.cancelTitleEdit();
-        this.editedParagraphTitle.forEach((_, i) => {
-          this.cancelParagraphTitleEdit(i);
-          this.cancelContentEdit(i);
-        });
-        break;
-      default:
-        break;
-    }
+  getParagraphEditById(paragraphId: string) {
+    return this.paragraphsEdit.find((p) => p.id === paragraphId);
   }
-  
-  private cancelTitleEdit() {
+
+  cancelEditTitle() {
     this.editModeTitle = false;
     this.editedTitle = this.content$.getValue()?.title;
   }
-  
-  private cancelParagraphTitleEdit(index: number) {
-    this.editModeParagraphTitle[index] = false;
-    this.editedParagraphTitle[index] = this.content$.getValue()?.paragraphs[index].title!;
+
+  cancelEditParagraph(paragraphId: string, fieldName?: keyof ParagraphEdit) {
+    let paragraphEdit = this.paragraphsEdit.find((p) => p.id === paragraphId);
+    if (!paragraphEdit) {
+      console.error(`cancelEdit: paragraphId ${paragraphId} is not valid.`);
+      return;
+    }
+
+    if (
+      fieldName &&
+      fieldName !== 'id' &&
+      !Object.keys(paragraphEdit).includes(fieldName)
+    ) {
+      console.error(`
+        cancelEdit: fieldName ${fieldName} is not valid.
+      `);
+      return;
+    }
+
+    const baseValue = this.paragraphs$
+      .getValue()
+      ?.find((p) => p.id === paragraphId);
+    if (baseValue) {
+      if (!fieldName) {
+        paragraphEdit.title.editMode = false;
+        paragraphEdit.content.editMode = false;
+        paragraphEdit.title.value = baseValue.title;
+        paragraphEdit.content.value = baseValue.content;
+      } else {
+        (paragraphEdit![fieldName] as ParagraphEditField).editMode = false;
+        (paragraphEdit![fieldName] as ParagraphEditField).value =
+          baseValue[fieldName];
+      }
+    }
   }
-  
-  private cancelContentEdit(index: number) {
-    this.editModeContent[index] = false;
-    this.editedContent[index] = this.content$.getValue()?.paragraphs[index].content!;
-  }
-  
 
   save() {
-    const updatedContent: CreateContent = new CreateContent(
-      this.editedTitle!,
-      this.editedParagraphTitle.map(
-        (title, index): Paragraph => ({
-          id: this.content$.getValue()?.paragraphs[index].id!,
-          title,
-          content: this.editedContent[index],
-        })
-      )
-    );
 
-    this.contentService.updateContent(
-      this.content$.getValue()?.id!,
-      updatedContent
-    );
+    if (this.editModeTitle) {
+      this.contentService.updateContent(
+        this.content$.getValue()?.id!,
+        {
+          title: this.editedTitle, 
+        }
+      )
+    }
+
+    this.paragraphsEdit.filter(
+      (p) => p.title.editMode || p.content.editMode
+    ).forEach((p) => {
+        let newParagraph: UpdateParagraph = {};
+        if (p.title.editMode) {
+          newParagraph.title = p.title.value;
+        }
+        if (p.content.editMode) {
+          newParagraph.content = p.content.value;
+        }
+        
+        this.paragraphService.updateParagraph(p.id, newParagraph);
+    });
 
     this.closeAllEditors();
   }
 
   private closeAllEditors() {
     this.editModeTitle = false;
-    this.editModeContent.fill(false)
-    this.editModeParagraphTitle.fill(false)
+    this.paragraphsEdit.forEach((p) => {
+      p.title.editMode = false;
+      p.content.editMode = false;
+    });
   }
 }

@@ -1,10 +1,10 @@
-import { Paragraph } from "./paragraph.dto";
+import { CreateParagraph } from "../../paragraph/dto/create-paragraph.dto";
 
 export class CreateContent {
     title: string;
-    paragraphs: Paragraph[];
+    paragraphs: CreateParagraph[];
 
-    constructor(title: string, paragraphs: Paragraph[]) {
+    constructor(title: string, paragraphs: CreateParagraph[]) {
         this.title = title;
         this.paragraphs = paragraphs;
     }

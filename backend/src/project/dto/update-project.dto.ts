@@ -1,23 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { UpdateParagraphDto } from '../paragraph/dto/update-paragraph.dto';
+import { PartialType } from '@nestjs/swagger';
+import { CreateProjectDto } from './create-project.dto';
 
-export class UpdateProjectDto {
-  @ApiProperty({ required: false, example: 'Updated Project' })
-  title?: string;
-
-  @ApiProperty({ required: false, example: 'Updated project content' })
-  content?: string;
-
-  @ApiProperty({
-    type: [UpdateParagraphDto],
-    required: false,
-    example: [
-      {
-        id: '1',
-        title: 'Updated Paragraph 1',
-        content: 'Updated paragraph content',
-      },
-    ],
-  })
-  paragraphs?: UpdateParagraphDto[];
+export class UpdateProjectDto extends PartialType(CreateProjectDto) {
 }

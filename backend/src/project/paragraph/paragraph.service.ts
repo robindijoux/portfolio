@@ -39,12 +39,14 @@ export class ParagraphService {
 
   async update(
     projectId: string,
+    paragraphId: string,
     updateParagraphDto: UpdateParagraphDto,
   ): Promise<Paragraph> {
-    const targetParagraphId = updateParagraphDto.id;
-    const toUpdate = JSON.parse(JSON.stringify(updateParagraphDto))
-    const paragraph = await this.findOne(projectId, targetParagraphId);
-    Object.assign(paragraph, toUpdate);
+    let paragraph = await this.findOne(projectId, paragraphId);
+    paragraph = {
+      ...paragraph,
+      ...updateParagraphDto,
+    };
     return await this.paragraphRepository.save(paragraph);
   }
 
