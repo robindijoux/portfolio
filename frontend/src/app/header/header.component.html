@@ -9,7 +9,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse ms-4" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+      <div class="navbar-nav flex-fill">
         <button *ngFor="let project of getProjectService().getAllProjects()|async" (click)="selectProject(project.id)"
           [class]="
               'shadow btn btn-primary rounded nav-link m-1' +
@@ -23,15 +23,17 @@
           (click)="navigate(['add-project'])">
           <i class="bi bi-clipboard2-plus"></i> Add project
         </button>
-        <button *ngIf="!(showAdminButtons()|async)"
-          class="ms-5 shadow btn btn-secondary rounded nav-link m-1 text-light" data-bs-toggle="modal"
-          data-bs-target="#loginModal">
-          <i class="bi bi-person-lock"></i>
+        <div class="ms-auto">
+          <button *ngIf="!(showAdminButtons()|async)"
+            class="shadow btn btn-secondary rounded nav-link m-1 text-light" data-bs-toggle="modal"
+            data-bs-target="#loginModal">
+            <i class="bi bi-person-lock"></i>
+          </button>
+          <button *ngIf="showAdminButtons()|async" class="shadow btn btn-secondary rounded nav-link m- text-light"
+            (click)="logout()">
+            <i class="bi bi-door-open"></i>
         </button>
-        <button *ngIf="showAdminButtons()|async" class="ms-5 shadow btn btn-secondary rounded nav-link m- text-light"
-          (click)="logout()">
-          <i class="bi bi-door-open"></i>
-        </button>
+        </div>
       </div>
     </div>
   </div>
