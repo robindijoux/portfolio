@@ -1,0 +1,8 @@
+# First stage: build the application
+FROM node:current-alpine3.17
+WORKDIR /usr/src/app
+COPY package*.json yarn.lock ./
+RUN yarn install && yarn cache clean
+COPY src/* ./src/
+COPY nest-cli.json tsconfig.build.json tsconfig.json ./
+CMD [ "yarn", "start:dev" ]

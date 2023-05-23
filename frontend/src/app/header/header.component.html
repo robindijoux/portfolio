@@ -1,6 +1,6 @@
 <nav class="navbar fixed-top navbar-expand-lg">
     <div class="container-fluid ps-0">
-      <button class="navbar-brand btn btn-secondary rounded-0 rounded-end" (click)="navigate([''])">
+      <button class="shadow navbar-brand btn btn-primary rounded-0 rounded-end" (click)="navigate([''])">
         <h3 class="m-0" >Hello, World.</h3>
       </button>
       <button
@@ -20,7 +20,7 @@
             *ngFor="let project of getProjectService().getAllProjects()|async"
             (click)="selectProject(project.id)"
             [class]="
-              'btn btn-primary rounded nav-link m-1' +
+              'shadow btn btn-primary rounded nav-link m-1' +
               (getProjectIdToBold() === project.id ? ' active' : '')
             "
             [attr.aria-current]="
@@ -29,11 +29,45 @@
           >
             {{ project.title }}
           </button>
-          <button *ngIf="showAdminButtons()|async" class="btn btn-info rounded text-white nav-link m-1" (click)="navigate(['add-project'])">
+          <button *ngIf="showAdminButtons()|async" class="shadow btn btn-secondary rounded nav-link m-1" (click)="navigate(['add-project'])">
             <i class="bi bi-clipboard2-plus"></i> Add project
           </button>
+            <button *ngIf="!(showAdminButtons()|async)" class="ms-5 shadow btn btn-secondary rounded nav-link m-1" data-bs-toggle="modal" data-bs-target="#loginModal">
+              <i class="bi bi-person-lock"></i>
+            </button>
+            <button *ngIf="showAdminButtons()|async" class="ms-5 shadow btn btn-secondary rounded nav-link m-1" (click)="logout()">
+              <i class="bi bi-door-open"></i>
+            </button>
         </div>
       </div>
     </div>
   </nav>
+
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="loginModalLabel">Hello Admin 🙂</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="login()" #loginForm="ngForm">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" [(ngModel)]="loginData.username" required>
+            </div>
+            <div>
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" [(ngModel)]="loginData.password" required>
+            </div>
+            <div class="modal-footer mt-5">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>
+            </div>
+          </form>
+        </div>
+        
+      </div>
+    </div>
+  </div>
   

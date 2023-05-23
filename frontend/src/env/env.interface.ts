@@ -5,6 +5,7 @@ export interface IEnv {
         endpoints: {
             project: string;
             paragraph: string;
+            authentication: string;
         }
     }
 }

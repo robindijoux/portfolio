@@ -3,7 +3,6 @@ import { Project } from '../services/project/dto/project.dto';
 import { BehaviorSubject, map } from 'rxjs';
 import { ProjectService } from '../services/project/project.service';
 import { SessionService } from '../services/session/session.service';
-import { ROLE } from '../services/session/dto/session.dto';
 import { UpdateParagraph } from '../services/paragraph/dto/update-paragraph.dto';
 import { ParagraphService } from '../services/paragraph/paragraph.service';
 import { Paragraph } from '../services/paragraph/dto/paragraph.dto';
@@ -66,7 +65,7 @@ export class ProjectComponent {
   shouldDisplayAdmin() {
     return this.sessionService
       .getCurrentSession()
-      .pipe(map((s) => s?.role === ROLE.ADMIN));
+      .pipe(map((s) => s !== undefined));
   }
 
   getParagraphEditById(paragraphId: string) {

@@ -3,6 +3,8 @@ import { ParagraphService } from './paragraph.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Paragraph } from './entities/paragraph.entity';
 import { ParagraphController } from './paragraph.controller';
+import { AuthenticationModule } from '../../authentication/authentication.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   controllers: [ParagraphController],
@@ -11,7 +13,8 @@ import { ParagraphController } from './paragraph.controller';
   imports: [
     TypeOrmModule.forFeature([
       Paragraph
-    ])
+    ]),
+    JwtModule
   ]
 })
 export class ParagraphModule {}

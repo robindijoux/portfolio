@@ -5,10 +5,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectModule } from './project/project.module';
-import { Project } from './project/entities/project.entity';
-import { Paragraph } from './project/paragraph/entities/paragraph.entity';
 import { RouterModule } from '@nestjs/core';
 import { ParagraphModule } from './project/paragraph/paragraph.module';
+import { AuthenticationModule } from './authentication/authentication.module';
+import jwtConfig from './config/jwt.config';
+import { JwtStrategy } from './authentication/JwtStrategy';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { ParagraphModule } from './project/paragraph/paragraph.module';
     ConfigModule.forRoot({
       envFilePath: [`${__dirname}/env/.env.local`],
       load: [
-        databaseConfig
+        databaseConfig,
+        jwtConfig
       ],
       isGlobal: true,
     }),
@@ -41,9 +43,10 @@ import { ParagraphModule } from './project/paragraph/paragraph.module';
       },
       inject: [ConfigService],
     }),
-    ProjectModule
+    ProjectModule,
+    AuthenticationModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtStrategy],
 })
 export class AppModule {}

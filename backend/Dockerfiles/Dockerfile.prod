@@ -1,0 +1,17 @@
+# First stage: build the application
+FROM node:current-alpine3.17 AS build
+WORKDIR /usr/src/app
+COPY package*.json yarn.lock ./
+RUN yarn install && yarn cache clean
+COPY ./src .
+COPY nest-cli.json tsconfig.build.json tsconfig.json ./
+RUN yarn build
+
+# Second stage: run the application with production dependencies
+FROM node:14-alpine
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN yarn install --production=true && yarn cache clean
+COPY --from=build /usr/src/app/dist ./dist
+CMD ["node", "./dist/main"]
+EXPOSE 3000

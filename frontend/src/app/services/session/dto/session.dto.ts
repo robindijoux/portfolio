@@ -1,10 +1,7 @@
-export interface Session {
-    id: string;
-    role: ROLE;
-    token: string;
-}
+export class Session {
+    accessToken: string;
 
-export enum ROLE {
-    ADMIN = 1,
-    CLASSIC = 0
+    constructor(accessToken: string) {
+        this.accessToken = accessToken;
+    }
 }

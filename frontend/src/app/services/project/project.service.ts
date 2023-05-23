@@ -7,6 +7,7 @@ import { env } from '../../../env/env';
 import { UpdateProject } from './dto/update-project.dto';
 import { CreateParagraph } from '../paragraph/dto/create-paragraph.dto';
 import { ParagraphService } from '../paragraph/paragraph.service';
+import { SessionService } from '../session/session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class ProjectService {
 
   private projectUrl?: string;
 
-  constructor(private http: HttpClient, private paragraphService: ParagraphService) {
+  constructor(private http: HttpClient, private paragraphService: ParagraphService, private sessionService: SessionService) {
     this.selectedProjects$.subscribe({
       next: (project) => {
           this.paragraphService.setProjectId(project?.id!);

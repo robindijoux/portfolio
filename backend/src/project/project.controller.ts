@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Logger, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse } from '@nestjs/swagger';
+import { ApiTags, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthGuard } from '../authentication/AuthGuard';
 
 @Controller('')
 @ApiTags('project')
@@ -12,6 +13,8 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiCreatedResponse({ description: 'Creates a new project' })
   create(@Body() createProjectDto: CreateProjectDto) {
     this.logger.log('Creating a new project');
@@ -34,6 +37,8 @@ export class ProjectController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Updates a specific project by ID' })
   @ApiNotFoundResponse({ description: 'Project not found' })
   update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
@@ -42,6 +47,8 @@ export class ProjectController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiNoContentResponse({ description: 'Removes a specific project by ID' })
   @ApiNotFoundResponse({ description: 'Project not found' })
   remove(@Param('id') id: string) {

@@ -7,5 +7,5 @@ export default registerAs('database', () => ({
     host: process.env.DATABASE_HOST,
     port: +process.env.DATABASE_PORT,
     database: process.env.DATABASE_DB_NAME,
-    synchronize: JSON.parse(process.env.DATABASE_SYNCHRONIZE) as boolean,
+    synchronize: process.env.DATABASE_SYNCHRONIZE ? JSON.parse(process.env.DATABASE_SYNCHRONIZE) as boolean: false,
 }))

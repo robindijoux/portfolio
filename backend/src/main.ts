@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('Portfolio\'s back')
     .setDescription('The Portfolio API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
