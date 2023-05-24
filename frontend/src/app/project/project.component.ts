@@ -6,6 +6,7 @@ import { SessionService } from '../services/session/session.service';
 import { UpdateParagraph } from '../services/paragraph/dto/update-paragraph.dto';
 import { ParagraphService } from '../services/paragraph/paragraph.service';
 import { Paragraph } from '../services/paragraph/dto/paragraph.dto';
+import { CreateParagraph } from '../services/paragraph/dto/create-paragraph.dto';
 
 interface ParagraphEdit {
   id: string;
@@ -24,6 +25,7 @@ interface ParagraphEditField {
   styleUrls: ['./project.component.sass'],
 })
 export class ProjectComponent {
+
   project$: BehaviorSubject<Project | undefined>;
   paragraphs$: BehaviorSubject<Paragraph[]>;
 
@@ -44,10 +46,9 @@ export class ProjectComponent {
     this.project$.subscribe((project) => {
       this.editedTitle = project?.title;
     });
-
     this.paragraphs$.subscribe((paragraphs) => {
-      paragraphs.forEach((paragraph, i) => {
-        this.paragraphsEdit[i] = {
+      this.paragraphsEdit = paragraphs.map((paragraph) => {
+        return {
           id: paragraph.id,
           title: {
             value: paragraph.title,
@@ -66,10 +67,6 @@ export class ProjectComponent {
     return this.sessionService
       .getCurrentSession()
       .pipe(map((s) => s !== undefined));
-  }
-
-  getParagraphEditById(paragraphId: string) {
-    return this.paragraphsEdit.find((p) => p.id === paragraphId);
   }
 
   cancelEditTitle() {
@@ -146,5 +143,26 @@ export class ProjectComponent {
       p.title.editMode = false;
       p.content.editMode = false;
     });
+  }
+
+  addParagraph() {
+    const newParagraph: CreateParagraph = {
+      title: '',
+      content: ''
+    };
+  
+    this.paragraphService.createParagraphs(this.project$.getValue()!.id, [newParagraph]);
+  }
+  
+  deleteParagraph(paragraphId: string) {
+    const index = this.paragraphsEdit.findIndex((p) => p.id === paragraphId);
+    if (index !== -1) {
+      this.paragraphService.deleteParagraph(paragraphId);
+    }
+  }
+
+  deleteProject() {
+    console.log('delete project');
+    this.projectService.deleteProject(this.project$.getValue()!.id);
   }
 }

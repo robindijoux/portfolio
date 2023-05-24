@@ -78,19 +78,19 @@ export class ParagraphService {
   }
 
   createParagraphs(projectId: string, paragraphs: CreateParagraph[]) {
-      paragraphs
+      Promise.all(paragraphs
         .map((paragraph) => {
           return firstValueFrom(
             this.http
               .post<Paragraph>(this.getParagraphUrlForProject(projectId)!, paragraph)
               .pipe(retry(3))
           );
-        })
-        .forEach(async (request) => {
-          await request;
-        });
-      console.log(`Refresh paragraphs`);
-      this.refreshParagraphs();
+        })).then(
+          (res) => {
+            this.refreshParagraphs();
+            console.log(res);
+          },
+        );
   }
 
   updateParagraph(id: string, paragraphUpdate: UpdateParagraph) {
@@ -106,6 +106,22 @@ export class ParagraphService {
             console.error(e);
           },
         });
+    } else {
+      console.error(`No URL`);
+    }
+  }
+
+  deleteParagraph(id: string) {
+    if (this.paragraphUrl) {
+      this.http.delete(this.paragraphUrl! + '/' + id).subscribe({
+        next: () => {
+          console.log(`Refresh paragraphs`);
+          this.refreshParagraphs();
+        },
+        error: (e) => {
+          console.error(e);
+        },
+      });
     } else {
       console.error(`No URL`);
     }

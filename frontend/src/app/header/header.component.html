@@ -23,7 +23,7 @@
           (click)="navigate(['add-project'])">
           <i class="bi bi-clipboard2-plus"></i> Add project
         </button>
-        <div class="ms-auto">
+        <div class="flex-fill d-grid gap-2 d-md-flex justify-content-md-end">
           <button *ngIf="!(showAdminButtons()|async)"
             class="shadow btn btn-secondary rounded nav-link m-1 text-light" data-bs-toggle="modal"
             data-bs-target="#loginModal">

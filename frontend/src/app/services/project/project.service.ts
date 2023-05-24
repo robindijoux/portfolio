@@ -13,6 +13,7 @@ import { SessionService } from '../session/session.service';
   providedIn: 'root',
 })
 export class ProjectService {
+
   private projects$: BehaviorSubject<Project[]> = new BehaviorSubject<
     Project[]
   >([]);
@@ -104,6 +105,22 @@ export class ProjectService {
     if (this.projectUrl) {
       this.http.patch(this.projectUrl + '/' + id, projectUpdate).subscribe({
         next: () => {
+          this.refreshProjects();
+        },
+        error: (e) => {
+          console.error(e);
+        },
+      });
+    } else {
+      console.error(`No URL`);
+    }
+  }
+
+  deleteProject(id: string) {
+    if (this.projectUrl) {
+      this.http.delete(this.projectUrl + '/' + id).subscribe({
+        next: () => {
+          this.selectedProjects$.next(undefined);
           this.refreshProjects();
         },
         error: (e) => {
