@@ -39,7 +39,7 @@ export class AuthenticationController {
   signIn(
     @Body() authCredentialsDto: CredentialsDto,
   ): Promise<{ accessToken: string }> {
-    this.logger.log(`Received signIn: ${JSON.stringify(authCredentialsDto)}`);
+    this.logger.log(`Received signIn for ${authCredentialsDto.username}`);
     return this.authService.signIn(authCredentialsDto);
   }
 }

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,6 +16,9 @@ export interface JwtPayload {
   
 })
 export class AuthenticationService {
+
+  private readonly logger = new Logger(AuthenticationService.name);
+
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -49,6 +52,7 @@ export class AuthenticationService {
     const user = await this.userRepository.findOneBy({ username });
   
     if (user && (await bcrypt.compare(password, user.password))) {
+      this.logger.log(`User ${username} signed in ${user.id}`);
       const payload: JwtPayload = { username };
       const accessToken = await this.jwtService.signAsync(payload, {
         expiresIn: '24h',
