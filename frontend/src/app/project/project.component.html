@@ -12,9 +12,10 @@
   </h1>
 
   <ng-container *ngIf="shouldDisplayAdmin() | async">
-    <quill-editor></quill-editor>
+    <quill-editor [(ngModel)]="editedHtmlContent"></quill-editor>
   </ng-container>
   <ng-container *ngIf="!(shouldDisplayAdmin() | async)">
+    <div [innerHTML]="(project$ | async)?.htmlContent"></div>
   </ng-container>
 
   <div *ngIf="shouldDisplayAdmin() | async">

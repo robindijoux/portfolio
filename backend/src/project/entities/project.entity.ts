@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Generated, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Project {
-  @PrimaryGeneratedColumn('uuid')
+  @Generated('uuid')
+  @PrimaryColumn()
   id: string;
 
   @Column({

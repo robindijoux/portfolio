@@ -3,7 +3,6 @@ import { Project } from '../services/project/dto/project.dto';
 import { BehaviorSubject, map } from 'rxjs';
 import { ProjectService } from '../services/project/project.service';
 import { SessionService } from '../services/session/session.service';
-import Quill from 'quill';
 
 @Component({
   selector: 'app-project',
@@ -16,6 +15,7 @@ export class ProjectComponent {
 
   editModeTitle = false;
   editedTitle?: string;
+  editedHtmlContent?: string;
 
   constructor(
     private projectService: ProjectService,
@@ -24,11 +24,10 @@ export class ProjectComponent {
     this.project$ = this.projectService.getSelectedProject();
 
     this.project$.subscribe((project) => {
+      console.log('project changed', project);
       this.editedTitle = project?.title;
+      this.editedHtmlContent = project?.htmlContent;
     });
-
-
-
   }
 
   shouldDisplayAdmin() {
@@ -43,15 +42,22 @@ export class ProjectComponent {
   }
 
   save() {
+    console.log('saving project', this.project$.getValue());
+    
 
-    if (this.editModeTitle) {
-      this.projectService.updateProject(
-        this.project$.getValue()?.id!,
-        {
-          title: this.editedTitle, 
-        }
-      )
+    let project = this.project$.getValue();
+
+    if (project === undefined) {
+      return;
     }
+
+    this.projectService.updateProject(
+      project.id,
+      {
+        title: this.editedTitle,
+        htmlContent: this.editedHtmlContent,
+      }
+    )
 
     this.closeAllEditors();
   }

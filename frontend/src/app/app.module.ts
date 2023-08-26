@@ -36,7 +36,7 @@ import Quill from 'quill';
           ['blockquote', 'code-block'],
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
           [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-          [{ 'header': [1, 2, 3, false] }],
+          [{ 'header': [2, 3, 4, false] }],
           [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
           [{ 'font': [] }],
           [{ 'align': 'left' }, { 'align': 'center' }, { 'align': 'right' }],
