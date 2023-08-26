@@ -1,7 +1,9 @@
 <div class="pe-3 d-flex justify-content-end fixed-bottom">
     <ng-container *ngFor="let link of links">
-        <button class="shadow btn btn-primary border border-primary rounded-0 rounded-top p-2 me-1 d-flex justify-content-center align-items-center" (click)="navigateToExternalUrl(link.url)">
-            <img *ngIf="link.icon" [src]="link.icon" [alt]="link.name + ' icon'" class="h-100 me-1" />
+        <button class="shadow btn btn-info border border-primary rounded-0 rounded-top p-2 me-1 d-flex justify-content-center align-items-center" (click)="navigateToExternalUrl(link.url)">
+           <!-- add here the related icon -->
+           <span
+           *ngIf="link.icon" [innerHTML]="sanitizeIcon(link.icon)" class="me-1"></span>
             {{link.name}}
         </button>
     </ng-container>

@@ -10,21 +10,27 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   }
 })
 export class FooterComponent {
-  links: { name: string; url: string; icon?: SafeHtml;}[] = [
+  links: { name: string; url: string; icon?: string;}[] = [
     {
       name: 'Github', 
       url: 'https://github.com/robindijoux',
-      icon: '/assets/img/github.svg'
+      // icon: '/assets/img/github.svg'
+      icon: '<i class="bi bi-github"></i>'
     },
     {
       name: 'LinkedIn',
       url: 'https://linkedin.com/in/robindijoux',
-      icon: '/assets/img/linkedin.svg'
+      // icon: '/assets/img/linkedin.svg'
+      icon: '<i class="bi bi-linkedin"></i>'
     },
   ];
 
   constructor(private sanitizer: DomSanitizer) {
     
+  }
+
+  sanitizeIcon(str: string) {
+    return this.sanitizer.bypassSecurityTrustHtml(str);
   }
 
   navigateToExternalUrl(url: string) {
