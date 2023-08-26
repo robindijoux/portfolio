@@ -6,7 +6,6 @@ import databaseConfig from './config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectModule } from './project/project.module';
 import { RouterModule } from '@nestjs/core';
-import { ParagraphModule } from './project/paragraph/paragraph.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import jwtConfig from './config/jwt.config';
 import { JwtStrategy } from './authentication/JwtStrategy';
@@ -17,12 +16,6 @@ import { JwtStrategy } from './authentication/JwtStrategy';
       {
         path: 'project',
         module: ProjectModule,
-        children: [
-          {
-            path: ':projectId/paragraph',
-            module: ParagraphModule,
-          }
-        ]
       },
     ]),
     ConfigModule.forRoot({

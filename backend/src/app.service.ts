@@ -13,7 +13,7 @@ export class AppService implements OnApplicationBootstrap {
     ) {}
 
     onApplicationBootstrap() {
-        // this.logger.log(`Config: ${JSON.stringify(this.configService)}`)
+        this.logger.log(`Config: ${JSON.stringify(this.configService)}`)
     }
 }
  

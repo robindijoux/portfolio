@@ -30,9 +30,18 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.sass"
+              "src/styles.sass",
+              "node_modules/quill/dist/quill.core.css",
+              "node_modules/quill/dist/quill.bubble.css",
+              "node_modules/quill/dist/quill.snow.css",
+              "node_modules/quill-emoji/dist/quill-emoji.css",
+              "node_modules/quill-mention/dist/quill.mention.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/quill/dist/quill.js",
+              "node_modules/quill-emoji/dist/quill-emoji.js",
+              "node_modules/quill-mention/dist/quill.mention.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -46,12 +55,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumError": "1mb"
                 }
               ],
               "outputHashing": "all"

@@ -5,25 +5,6 @@
       <input type="text" id="title" class="form-control" formControlName="title" required>
     </div>
   
-    <div formArrayName="paragraphs">
-      <div *ngFor="let paragraph of paragraphForms.controls; let i = index" class="mb-3">
-        <div [formGroupName]="i">
-          <div class="mb-3">
-            <label for="paragraphTitle" class="form-label">Paragraph Title:</label>
-            <input type="text" id="paragraphTitle" class="form-control" formControlName="title" required>
-          </div>
-  
-          <div class="mb-3">
-            <label for="paragraphContent" class="form-label">Paragraph Content:</label>
-            <textarea id="paragraphContent" class="form-control" formControlName="content" required></textarea>
-          </div>
-  
-          <button type="button" class="btn btn-danger" (click)="removeParagraph(i)">Remove</button>
-        </div>
-      </div>
-    </div>
-  
-    <button type="button" class="btn btn-primary me-2" (click)="addParagraph()">Add Paragraph</button>
     <button type="submit" class="btn btn-secondary">Create Project</button>
   </form>
   

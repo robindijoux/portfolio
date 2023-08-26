@@ -1,11 +1,9 @@
-import { CreateParagraph } from "../../paragraph/dto/create-paragraph.dto";
-
 export class CreateProject {
     title: string;
-    paragraphs: CreateParagraph[];
+    htmlContent?: string;
 
-    constructor(title: string, paragraphs: CreateParagraph[]) {
+    constructor(title: string, htmlContent?: string) {
         this.title = title;
-        this.paragraphs = paragraphs;
+        this.htmlContent = htmlContent;
     }
 }

@@ -17,31 +17,13 @@ export class ProjectFormComponent implements OnInit {
 
   ngOnInit() {
     this.projectForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      paragraphs: this.formBuilder.array([])
+      title: ['', Validators.required]
     });
-  }
-
-  get paragraphForms() {
-    return this.projectForm.get('paragraphs') as FormArray;
-  }
-
-  addParagraph() {
-    const paragraph = this.formBuilder.group({
-      title: ['', Validators.required],
-      content: ['', Validators.required]
-    });
-
-    this.paragraphForms.push(paragraph);
-  }
-
-  removeParagraph(index: number) {
-    this.paragraphForms.removeAt(index);
   }
 
   onSubmit() {
     if (this.projectForm.valid) {
-      this.projectService.createProject(this.projectForm.value.title, this.projectForm.value.paragraphs)
+      this.projectService.createProject(this.projectForm.value.title)
       this.projectForm.reset()
     }
   }

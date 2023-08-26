@@ -5,8 +5,6 @@ import { BehaviorSubject } from 'rxjs';
 import { CreateProject } from './dto/create-project.dto';
 import { env } from '../../../env/env';
 import { UpdateProject } from './dto/update-project.dto';
-import { CreateParagraph } from '../paragraph/dto/create-paragraph.dto';
-import { ParagraphService } from '../paragraph/paragraph.service';
 import { SessionService } from '../session/session.service';
 
 @Injectable({
@@ -22,12 +20,7 @@ export class ProjectService {
 
   private projectUrl?: string;
 
-  constructor(private http: HttpClient, private paragraphService: ParagraphService, private sessionService: SessionService) {
-    this.selectedProjects$.subscribe({
-      next: (project) => {
-          this.paragraphService.setProjectId(project?.id!);
-      }
-    })
+  constructor(private http: HttpClient, private sessionService: SessionService) {
     if (env.backend) {
       this.projectUrl =
         env.backend!.protocol +
@@ -83,14 +76,13 @@ export class ProjectService {
     
   }
 
-  createProject(title: string, paragraphs: CreateParagraph[]) {
-    const createProject = new CreateProject(title, paragraphs);
+  createProject(title: string, htmlContent?: string) {
+    const createProject = new CreateProject(title, htmlContent);
     if (this.projectUrl) {
       this.http.post<Project>(this.projectUrl, createProject).subscribe({
         next: (res) => {
           console.log(res);
           this.refreshProjects();
-          this.paragraphService.createParagraphs(res.id,paragraphs);
         },
         error: (e) => {
           console.error(e);

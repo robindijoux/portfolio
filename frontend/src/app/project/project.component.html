@@ -10,31 +10,14 @@
     </ng-template>
     <button class="btn btn-danger" *ngIf="shouldDisplayAdmin() | async"  (click)="deleteProject()">Delete Project</button>
   </h1>
-  <ng-container *ngFor="let paragraph of paragraphsEdit; let i = index">
-    <h2 class="d-flex">
-      <ng-container *ngIf="!paragraph.title?.editMode; else editParagraphTitle">
-        {{ paragraph.title.value }}
-        <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="paragraph.title.editMode= true"></i>
-      </ng-container>
-      <ng-template #editParagraphTitle>
-        <input type="text" class="form-control w-50 me-2" [(ngModel)]="paragraph.title!.value" [value]="paragraph.title">
-        <button class="btn btn-danger" (click)="cancelEditParagraph(paragraph.id, 'title')">Cancel</button>
-      </ng-template>
-    </h2>
-    <p class="d-flex">
-      <ng-container *ngIf="!paragraph.content?.editMode; else editContent">
-        {{ paragraph.content.value }}
-        <i class="bi bi-pencil-square ms-5" *ngIf="shouldDisplayAdmin() | async" (click)="paragraph.content!.editMode = true"></i>
-      </ng-container>
-      <ng-template #editContent>
-        <textarea class="form-control w-50 me-2" rows="3" [(ngModel)]="paragraph.content!.value">{{ paragraph.content.value }}</textarea>
-        <button class="btn btn-danger" (click)="cancelEditParagraph(paragraph.id, 'content')">Cancel</button>
-      </ng-template>
-      <button class="btn btn-danger" *ngIf="shouldDisplayAdmin() | async"  (click)="deleteParagraph(paragraph.id)">Delete Paragraph</button>
-    </p>
+
+  <ng-container *ngIf="shouldDisplayAdmin() | async">
+    <quill-editor></quill-editor>
   </ng-container>
+  <ng-container *ngIf="!(shouldDisplayAdmin() | async)">
+  </ng-container>
+
   <div *ngIf="shouldDisplayAdmin() | async">
-    <button class="btn btn-primary" (click)="addParagraph()">Add Paragraph</button>
     <button class="btn btn-secondary text-white" (click)="save()">Save <i class="bi bi-pencil-square"></i></button>
   </div>
 </div>

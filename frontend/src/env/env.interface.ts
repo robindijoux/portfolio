@@ -1,5 +1,5 @@
 export interface IEnv {
-    backend: {
+    backend?: {
         host: string;
         protocol: string;
         endpoints: {
