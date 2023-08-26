@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -24,25 +24,35 @@ export class AuthenticationService {
 
   async signUp(authCredentialsDto: CredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto;
-
+  
+    const existingUser = await this.userRepository.findOneBy({ username });
+  
+    if (existingUser) {
+      throw new ConflictException('Username already exists');
+    }
+  
     const user = new User();
     user.username = username;
-    user.salt = bcrypt.genSaltSync();
-    user.password = await bcrypt.hash(password, user.salt);
-
-    await this.userRepository.save(user);
+    const salt = bcrypt.genSaltSync();
+    user.password = await bcrypt.hash(password, salt);
+  
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException('Could not create user: ' + error.message);
+    }
   }
-
-  async signIn(
-    authCredentialsDto: CredentialsDto,
-  ): Promise<{ accessToken: string }> {
+  
+  async signIn(authCredentialsDto: CredentialsDto): Promise<{ accessToken: string }> {
     const { username, password } = authCredentialsDto;
-
+  
     const user = await this.userRepository.findOneBy({ username });
-
+  
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { username };
-      const accessToken = await this.jwtService.signAsync(payload, { expiresIn: '24h' });
+      const accessToken = await this.jwtService.signAsync(payload, {
+        expiresIn: '24h',
+      });
       return { accessToken };
     } else {
       throw new UnauthorizedException('Invalid credentials');

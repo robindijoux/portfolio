@@ -26,7 +26,10 @@ import { JwtStrategy } from './authentication/JwtStrategy';
       },
     ]),
     ConfigModule.forRoot({
-      envFilePath: [`${__dirname}/env/.env.local`],
+      envFilePath: [
+        `${__dirname}/env/.env.local`, 
+        `${__dirname}/env/.env`
+      ],
       load: [
         databaseConfig,
         jwtConfig

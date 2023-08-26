@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Logger, Post, ValidationPipe } from '@nestjs/common';
 import { AuthenticationService } from '../service/authentication.service';
 import { CredentialsDto } from '../dto/credentials.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -6,6 +6,9 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 @ApiTags('Authentication')
 @Controller('authentication')
 export class AuthenticationController {
+
+  private readonly logger = new Logger(AuthenticationController.name);
+  
   constructor(private authService: AuthenticationService) {}
 
   @Post('/signup')
@@ -14,6 +17,7 @@ export class AuthenticationController {
   signUp(
     @Body() authCredentialsDto: CredentialsDto,
   ): Promise<void> {
+    this.logger.log(`Received signUp for ${authCredentialsDto.username}`);
     return this.authService.signUp(authCredentialsDto);
   }
 
@@ -35,6 +39,7 @@ export class AuthenticationController {
   signIn(
     @Body() authCredentialsDto: CredentialsDto,
   ): Promise<{ accessToken: string }> {
+    this.logger.log(`Received signIn: ${JSON.stringify(authCredentialsDto)}`);
     return this.authService.signIn(authCredentialsDto);
   }
 }
